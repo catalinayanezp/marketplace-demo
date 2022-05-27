@@ -1,41 +1,38 @@
 {
   "name": "marketplace-demo",
   "version": "0.7.3",
-  "description": "Marketplace powered by Stelace API and Vue.js",
-  "productName": "Stelace Instant Marketplace Demo",
-  "homepage": "https://stelace.com",
-  "author": "Stelace (https://stelace.com)",
-  "license": "MIT",
   "private": true,
+  "description": "Marketplace powered by Stelace API and Vue.js",
+  "author": "Stelace (https://stelace.com)",
   "scripts": {
-    "postinstall": "netlify-lambda install netlify && npm run fix-deps-crlf && npm run huskyinstall",
-    "lint": "eslint --ext .js,.vue src",
-    "fix-deps-crlf": "node scripts/fix-deps-crlf.js",
-    "test": "echo \"No test specified\" && exit 0",
     "build": "quasar build && npm run functions:build",
+    "test:e2e": "testcafe 'firefox' tests/e2e/**/*.e2e.{j,t}s",
+    "lint": "eslint --ext .js,.vue src",
+    "deploy": "npm run build && netlify deploy --dir=dist/spa",
     "conf": "node scripts/include-config.js",
     "conf:prod": "cross-env NODE_ENV=production node scripts/include-config.js",
-    "dev": "npm-run-all --parallel quasar:dev functions:dev",
-    "dev:ci": "NETLIFY_LAMBDA=true quasar dev",
-    "quasar:dev": "quasar dev",
-    "functions:save-env": "node netlify/scripts/save-env.js",
-    "functions:dev": "npm run functions:save-env && node netlify/scripts/dev.js",
-    "functions:build": "cross-env NODE_ENV=production npm run functions:save-env && cross-env NODE_ENV=production netlify-lambda build --config ./netlify/webpack.functions.js netlify/functions",
-    "translate": "node scripts/buildTranslationFiles.js",
-    "translate:prod": "cross-env NODE_ENV=production node scripts/buildTranslationFiles.js",
-    "deploy": "npm run build && netlify deploy --dir=dist/spa",
     "deploy:prod": "npm run build && node scripts/deployManuallyToNetlifyProd.js",
     "deploy:translations": "node scripts/deployTranslations.js",
     "deploy:translations:prod": "cross-env NODE_ENV=production node scripts/deployTranslations.js",
     "deploy:workflows": "node scripts/deploy-workflows.js",
     "deploy:workflows:prod": "cross-env NODE_ENV=production node scripts/deploy-workflows.js",
-    "seed": "node scripts/init-data.js",
-    "test:e2e": "testcafe 'firefox' tests/e2e/**/*.e2e.{j,t}s",
-    "test:e2e:headless": "testcafe 'firefox:headless' tests/e2e/**/*.e2e.{j,t}s",
-    "test:ci:e2e": "testcafe 'firefox:headless,chrome:headless' tests/e2e/**/*.e2e.{j,t}s -c 2 --skip-js-errors -r xunit:/tmp/test-results/e2e.xml",
+    "dev": "npm-run-all --parallel quasar:dev functions:dev",
+    "dev:ci": "NETLIFY_LAMBDA=true quasar dev",
+    "fix-deps-crlf": "node scripts/fix-deps-crlf.js",
+    "functions:build": "cross-env NODE_ENV=production npm run functions:save-env && cross-env NODE_ENV=production netlify-lambda build --config ./netlify/webpack.functions.js netlify/functions",
+    "functions:dev": "npm run functions:save-env && node netlify/scripts/dev.js",
+    "functions:save-env": "node netlify/scripts/save-env.js",
     "huskyinstall": "husky install",
+    "postinstall": "netlify-lambda install netlify && npm run fix-deps-crlf && npm run huskyinstall",
+    "postpublish": "pinst --enable",
     "prepublishOnly": "pinst --disable",
-    "postpublish": "pinst --enable"
+    "quasar:dev": "quasar dev",
+    "seed": "node scripts/init-data.js",
+    "test": "echo \"No test specified\" && exit 0",
+    "test:ci:e2e": "testcafe 'firefox:headless,chrome:headless' tests/e2e/**/*.e2e.{j,t}s -c 2 --skip-js-errors -r xunit:/tmp/test-results/e2e.xml",
+    "test:e2e:headless": "testcafe 'firefox:headless' tests/e2e/**/*.e2e.{j,t}s",
+    "translate": "node scripts/buildTranslationFiles.js",
+    "translate:prod": "cross-env NODE_ENV=production node scripts/buildTranslationFiles.js"
   },
   "dependencies": {
     "@quasar/extras": "^1.10.6",
@@ -58,6 +55,7 @@
     "vue-meta": "^2.4.0",
     "vue-slicksort": "^1.2.0",
     "vue-socket.io-extended": "4.1.0",
+    "vuetify": "^2.6.0",
     "vuex-router-sync": "^5.0.0"
   },
   "devDependencies": {
@@ -95,17 +93,16 @@
     "pinst": "^2.1.6",
     "preload-webpack-plugin": "^3.0.0-beta.4",
     "prerender-spa-plugin": "^3.4.0",
+    "sass": "~1.32.0",
+    "sass-loader": "^10.0.0",
     "shelljs": "^0.8.4",
     "testcafe": "^1.14.0",
     "testcafe-reporter-xunit": "^2.1.0",
     "testcafe-vue-selectors": "^3.1.0",
+    "vue-cli-plugin-vuetify": "~2.5.0",
+    "vuetify-loader": "^1.7.0",
     "webfontloader": "^1.6.28",
     "workbox-webpack-plugin": "^6.1.2"
-  },
-  "engines": {
-    "node": ">= 10.18.0",
-    "npm": ">= 5.6.0",
-    "yarn": ">= 1.6.0"
   },
   "browserslist": [
     "> 0.2%",
@@ -113,9 +110,17 @@
     "ie 11",
     "not dead"
   ],
+  "engines": {
+    "node": ">= 10.18.0",
+    "npm": ">= 5.6.0",
+    "yarn": ">= 1.6.0"
+  },
+  "homepage": "https://stelace.com",
+  "license": "MIT",
   "lint-staged": {
     "*.{js,vue}": [
       "eslint --fix"
     ]
-  }
+  },
+  "productName": "Stelace Instant Marketplace Demo"
 }
